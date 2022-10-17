@@ -7,11 +7,11 @@ const queue_options = {
   }
 }
 
-amqp.connect('amqp://localhost', function (err1, conn) {
+amqp.connect('amqp://localhost', function (err1, connection) {
   if (!!err1) {
     throw err1
   }
-  conn.createChannel(function (err2, channel) {
+  connection.createChannel(function (err2, channel) {
     if (!!err2) {
       throw err2
     }
@@ -21,6 +21,10 @@ amqp.connect('amqp://localhost', function (err1, conn) {
     const msg = 'Hello world!'
     channel.sendToQueue(queue, Buffer.from(msg))
     console.log('[x] sent %s', msg)
-    process.exit(0)
+
+    setTimeout(function() {
+      connection.close();
+      process.exit(0)
+    }, 500);
   })
 })
