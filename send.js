@@ -1,13 +1,15 @@
 #!/usr/bin/env node
+require('dotenv').config()
 
 const amqp = require('amqplib/callback_api');
+
 const queue_options = {
   greeting: {
     durable: false
   }
 }
 
-amqp.connect('amqp://localhost', function (err1, connection) {
+amqp.connect(`amqp://${process.env.RABBITMQ_HOST}`, function (err1, connection) {
   if (!!err1) {
     throw err1
   }
