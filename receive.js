@@ -8,11 +8,12 @@ const queue_options = {
   }
 }
 
-amqp.connect(`amqp://${process.env.RABBITMQ_HOST}`, function (err1, conn) {
+const connectionString = `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@${process.env.RABBITMQ_HOST}/${process.env.RABBITMQ_VIRTUALHOST}`
+amqp.connect(connectionString, function (err1, connection) {
   if (!!err1) {
     throw err1
   }
-  conn.createChannel(function (err2, channel) {
+  connection.createChannel(function (err2, channel) {
     if (!!err2) {
       throw err2
     }
