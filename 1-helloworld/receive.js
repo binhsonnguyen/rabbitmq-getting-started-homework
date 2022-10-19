@@ -1,8 +1,8 @@
 #!/usr/bin/env node
+require('dotenv').config()
 
 const amqp = require('amqplib/callback_api');
-const ConnectionStringBuilder = require('./connection-string-builder')
-
+const ConnectionStringBuilder = require('../connection-string-builder')
 const queue_options = {
   greeting: {
     durable: false
@@ -21,13 +21,12 @@ amqp.connect(connectionString, function (err1, connection) {
     const queue = 'greeting'
     channel.assertQueue(queue, queue_options['greeting'])
 
-    const msg = 'Hello world!'
-    channel.sendToQueue(queue, Buffer.from(msg))
-    console.log('[x] sent %s', msg)
+    console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
+    channel.consume(queue, function (msg) {
+      console.log('[x] received %s', msg.content.toString())
+    }, {
+      noAck: false
+    })
 
-    setTimeout(function() {
-      connection.close();
-      process.exit(0)
-    }, 500);
   })
 })
