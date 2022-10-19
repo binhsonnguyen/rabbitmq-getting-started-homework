@@ -9,7 +9,14 @@ const queue_options = {
   }
 }
 
-const connectionString = `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@${process.env.RABBITMQ_HOST}/${process.env.RABBITMQ_VIRTUALHOST}`
+let url = process.env.RABBITMQ_HOST
+const login = `${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}`
+if (!!login) url = `${login}@${url}`
+const virtualHost = process.env.RABBITMQ_VIRTUALHOST
+if (!!virtualHost) url = `${url}/${virtualHost}`
+const protocol = 'amqp'
+const connectionString = `${protocol}://${url}`
+
 amqp.connect(connectionString, function (err1, connection) {
   if (!!err1) {
     throw err1
