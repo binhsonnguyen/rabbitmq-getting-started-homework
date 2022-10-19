@@ -16,13 +16,16 @@ amqp.connect(connectionString, function (err1, connection) {
     const queue = {
       name: 'task_queue',
       options: {
-        durable: false
+        durable: true
       }
     }
     channel.assertQueue(queue.name, queue.options)
 
     const msg = process.argv.slice(2,).join(' ') || 'Hello world!'
-    channel.sendToQueue(queue.name, Buffer.from(msg))
+    const msgOptions = {
+      persistent: true
+    }
+    channel.sendToQueue(queue.name, Buffer.from(msg), msgOptions)
     console.log('[x] sent %s', msg)
 
     setTimeout(function() {
