@@ -3,12 +3,6 @@
 const amqp = require('amqplib/callback_api');
 const ConnectionStringBuilder = require('../connection-string-builder')
 
-const queue_options = {
-  greeting: {
-    durable: false
-  }
-}
-
 const connectionString = new ConnectionStringBuilder().fromEnv().build()
 amqp.connect(connectionString, function (err1, connection) {
   if (!!err1) {
@@ -18,11 +12,16 @@ amqp.connect(connectionString, function (err1, connection) {
     if (!!err2) {
       throw err2
     }
-    const queue = 'greeting'
-    channel.assertQueue(queue, queue_options['greeting'])
+    const queue = {
+      name: 'greeting',
+      options: {
+        durable: false
+      }
+    }
+    channel.assertQueue(queue.name, queue.options)
 
     const msg = 'Hello world!'
-    channel.sendToQueue(queue, Buffer.from(msg))
+    channel.sendToQueue(queue.name, Buffer.from(msg))
     console.log('[x] sent %s', msg)
 
     setTimeout(function() {
