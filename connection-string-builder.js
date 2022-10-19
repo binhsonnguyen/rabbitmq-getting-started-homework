@@ -1,20 +1,17 @@
 require('dotenv').config()
 
-module.exports = function ConnectionStringBuilder () {
+module.exports = function ConnectionStringBuilder (user, password, host, port, virtualHost) {
   let protocol = 'amqp'
-  let user = ''
-  let password = ''
-  let host = 'localhost'
-  let port = 5672
-  let virtualHost = ''
+  host = host || 'localhost'
+  port = port || 5672
 
   this.fromEnv = () => {
-    host = process.env.RABBITMQ_HOST || 'localhost'
-    port = process.env.RABBITMQ_PORT || 5672
-    user = process.env.RABBITMQ_USER || ''
-    password = process.env.RABBITMQ_PASSWORD || ''
-    virtualHost = process.env.RABBITMQ_VIRTUALHOST || ''
-    return this
+    let newHost = process.env.RABBITMQ_HOST || 'localhost'
+    let newPort = process.env.RABBITMQ_PORT || 5672
+    let newUser = process.env.RABBITMQ_USER || ''
+    let newPassword = process.env.RABBITMQ_PASSWORD || ''
+    let newVirtualHost = process.env.RABBITMQ_VIRTUALHOST || ''
+    return new ConnectionStringBuilder(newUser, newPassword, newHost, newPort, newVirtualHost)
   }
 
   this.build = () => {
