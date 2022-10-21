@@ -18,7 +18,7 @@ module.exports = function ConnectionStringBuilder (user, password, host, port, v
     let url = host
     if (!!port) url = `${url}:${port}`
     if (!!virtualHost) url = `${url}/${virtualHost}`
-    if (!!user) url = `'${user}':'${password}'@'${url}'`
+    if (!!user) url = `${user}:${password}@${url}`
     return `${protocol}://${url}`
   }
 }
