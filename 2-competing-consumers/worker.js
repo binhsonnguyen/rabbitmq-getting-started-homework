@@ -18,7 +18,7 @@ amqp.connect(connectionString, function (err1, connection) {
     const queue = {
       name: 'task_queue',
       options: {
-        durable: false
+        durable: true
       }
     }
     channel.assertQueue(queue.name, queue.options)
