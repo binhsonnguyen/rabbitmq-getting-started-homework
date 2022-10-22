@@ -22,6 +22,7 @@ amqp.connect(connectionString, function (err1, connection) {
       }
     }
     channel.assertQueue(queue.name, queue.options)
+    channel.prefetch(1)
 
     console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue);
     const workerOptions = {
