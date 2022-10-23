@@ -2,7 +2,6 @@
 
 const amqp = require('amqplib/callback_api');
 const ConnectionStringBuilder = require('../connection-string-builder')
-const { ExchangeDeclare } = require('amqplib/lib/defs')
 
 const connectionString = new ConnectionStringBuilder().fromEnv().build()
 amqp.connect(connectionString, function (err1, connection) {
@@ -28,7 +27,7 @@ amqp.connect(connectionString, function (err1, connection) {
     channel.close
 
     setTimeout(function () {
-      channel.clone()
+      channel.close()
       connection.close()
       process.exit(0)
     }, 500);
