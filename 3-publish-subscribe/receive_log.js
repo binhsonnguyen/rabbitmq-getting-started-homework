@@ -4,7 +4,6 @@ require('dotenv').config()
 const amqp = require('amqplib/callback_api')
 const ConnectionStringBuilder = require('../connection-string-builder')
 
-const SECONDS = 1000
 const connectionString = new ConnectionStringBuilder().fromEnv().build()
 
 amqp.connect(connectionString, function (err1, connection) {
@@ -27,12 +26,12 @@ amqp.connect(connectionString, function (err1, connection) {
       if (!!err3) {
         throw err3
       }
-
-      console.log(' [*] Waiting for messages in %s. To exit press CTRL+C', ok.queue)
+      const queueName = ok.queue
       const noRoutingKeyBecauseOfMeaningless = ''
-      channel.bindQueue(ok.queue, exchange, noRoutingKeyBecauseOfMeaningless)
+      console.log(' [*] Waiting for messages in %s. To exit press CTRL+C', queueName)
 
-      channel.consume(ok.queue, function (msg) {
+      channel.bindQueue(queueName, exchange, noRoutingKeyBecauseOfMeaningless)
+      channel.consume(queueName, function (msg) {
         if (!!msg.content) {
           console.log('[x] received %s', msg.content.toString())
         }
